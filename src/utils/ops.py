@@ -23,6 +23,8 @@ class GraphUnet(nn.Module):
         self.fuselayer_2 = FuseLayer(dim, act, drop_p, self.l_n + 1)
         self.fuselayer_3 = FuseLayer(dim, act, drop_p, self.l_n + 1)
         # self.fuselayer_4 = FuseLayer(dim, act, drop_p, self.l_n + 1)
+
+        #Use Or Not. Depends On Expeiment
         # self.GCNList_1=GCNList(dim,act,drop_p,self.l_n+1)
         # self.GCNList_2 = GCNList(dim, act, drop_p, self.l_n + 1)
 
