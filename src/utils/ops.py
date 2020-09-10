@@ -43,6 +43,7 @@ class GraphUnet(nn.Module):
             down_outs.append(h)
             g, h, idx = self.pools[i](g, h)
 
+
             indices_list.append(idx)
         adj_ms.append(g)
         down_outs.append(h)
