@@ -28,7 +28,7 @@ def get_args():
     parser.add_argument('-ks', nargs='+', type=float, default='0.9 0.8 0.7')
     parser.add_argument('-acc_file', type=str, default='re', help='acc file')
     parser.add_argument('-dis_frequence', type=int, default=100, help='display loss frequence')
-    parser.add_argument('-log_name', type=str, default="log_fuseOne", help='log name')
+    parser.add_argument('-log_name', type=str, default="log_fuseOneEqualNoProcess", help='log name')
     args, _ = parser.parse_known_args()
     return args
 
