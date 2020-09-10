@@ -6,6 +6,7 @@ import numpy as np
 from network import GNet
 from trainer import Trainer
 from utils.data_loader import FileLoader
+import logging
 
 
 def get_args():
@@ -26,6 +27,8 @@ def get_args():
     parser.add_argument('-act_c', type=str, default='ELU', help='output act')
     parser.add_argument('-ks', nargs='+', type=float, default='0.9 0.8 0.7')
     parser.add_argument('-acc_file', type=str, default='re', help='acc file')
+    parser.add_argument('-dis_frequence', type=int, default=100, help='display loss frequence')
+    parser.add_argument('-log_name', type=str, default="log_fuseOne", help='log name')
     args, _ = parser.parse_known_args()
     return args
 
@@ -36,16 +39,29 @@ def set_random(seed):
     torch.manual_seed(seed)
 
 
-def app_run(args, G_data, fold_idx):
+def app_run(args, G_data, fold_idx,logger):
     G_data.use_fold_data(fold_idx)
     net = GNet(G_data.feat_dim, G_data.num_class, args)
-    trainer = Trainer(args, net, G_data)
+    trainer = Trainer(args, net, G_data,logger)
     trainer.train()
 
 
 def main():
     args = get_args()
     print(args)
+
+    logger = logging.getLogger()
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        '%(asctime)s  %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    fileHandle = logging.FileHandler("{}/{}.txt".format("log_dir",args.log_name))
+    fileHandle.setFormatter(formatter)
+    logger.addHandler(fileHandle)
+
+
     set_random(args.seed)
     start = time.time()
     G_data = FileLoader(args).load_data()
@@ -53,10 +69,10 @@ def main():
     if args.fold == 0:
         for fold_idx in range(10):
             print('start training ------> fold', fold_idx+1)
-            app_run(args, G_data, fold_idx)
+            app_run(args, G_data, fold_idx,logger)
     else:
         print('start training ------> fold', args.fold)
-        app_run(args, G_data, args.fold-1)
+        app_run(args, G_data, args.fold-1,logger)
 
 
 if __name__ == "__main__":
