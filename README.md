@@ -39,7 +39,14 @@ Check the "data/README.md" for the format.
 
 Results
 -------
-
+| Models   | DD              | PROTEINS        |
+| -------- | --------------- |  --------------- |
+| PSCN     | 76.3    | 75.9    |
+| DIFFPOOL | 80.6%           |76.3%           |
+| SAGPool  | 76.5%           | 71.9%           |
+| GIN      | 82.0     | 76.2|
+| g-U-Net  | 83.0 | 78.7  |
+| Ours  | **84.04**  | **78.88** |
 
 
 Reference
