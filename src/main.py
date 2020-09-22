@@ -7,6 +7,7 @@ from network import GNet
 from trainer import Trainer
 from utils.data_loader import FileLoader
 import logging
+import numpy as np
 
 
 def get_args():
@@ -28,7 +29,7 @@ def get_args():
     parser.add_argument('-ks', nargs='+', type=float, default='0.9 0.8 0.7')
     parser.add_argument('-acc_file', type=str, default='re', help='acc file')
     parser.add_argument('-dis_frequence', type=int, default=100, help='display loss frequence')
-    parser.add_argument('-log_name', type=str, default="log_fuseOneEqualNoProcess", help='log name')
+    parser.add_argument('-log_name', type=str, default="log_COLLAB", help='log name')
     args, _ = parser.parse_known_args()
     return args
 
@@ -66,13 +67,22 @@ def main():
     start = time.time()
     G_data = FileLoader(args).load_data()
     print('load data using ------>', time.time()-start)
+    max_acc=[]
     if args.fold == 0:
         for fold_idx in range(10):
             print('start training ------> fold', fold_idx+1)
-            app_run(args, G_data, fold_idx,logger)
+            acc_result = app_run(args, G_data, fold_idx, logger)
+            max_acc.append(acc_result)
     else:
         print('start training ------> fold', args.fold)
-        app_run(args, G_data, args.fold-1,logger)
+        acc_result = app_run(args, G_data, args.fold - 1, logger)
+        max_acc.append(acc_result)
+    max_acc = np.asarray(max_acc)
+    logger.info("Final Result")
+    for i in range(len(max_acc)):
+        logger.info("{} Max Accuracy {}".format(i, max_acc[i]))
+    logger.info("Mean {}".format(max_acc.mean()))
+    logger.info("Standard Variance {}".format(max_acc.std()))
 
 
 if __name__ == "__main__":

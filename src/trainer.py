@@ -14,6 +14,7 @@ class Trainer:
         self.init(args, G_data.train_gs, G_data.test_gs)
         if torch.cuda.is_available():
             self.net.cuda()
+        self.test_result_file = "./results/{}.txt".format(self.args.log_name)
 
 
     def init(self, args, train_gs, test_gs):
@@ -25,6 +26,7 @@ class Trainer:
         self.optimizer = optim.Adam(
             self.net.parameters(), lr=self.args.lr, amsgrad=True,
             weight_decay=0.0008)
+        # self.lr_scheduler=torch.optim.lr_scheduler.MultiStepLR(optimizer=self.optimizer,milestones=[70,140],gamma=0.1)
 
     def to_cuda(self, gs):
         if torch.cuda.is_available():
@@ -63,6 +65,7 @@ class Trainer:
             loss, acc = self.run_epoch(
                 e_id, self.train_d, self.net, self.optimizer)
             self.logger.info(train_str % (e_id, loss, acc))
+            # self.lr_scheduler.step()
 
             with torch.no_grad():
                 self.net.eval()
@@ -70,5 +73,9 @@ class Trainer:
             max_acc = max(max_acc, acc)
             self.logger.info(test_str % (e_id, loss, acc, max_acc))
 
-        with open(self.args.acc_file, 'a+') as f:
-            f.write(line_str % (self.fold_idx, max_acc))
+
+
+
+        # with open(self.test_result_file, 'a+') as f:
+        #     f.write(line_str % (self.fold_idx, max_acc))
+        return max_acc

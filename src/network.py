@@ -13,6 +13,9 @@ class GNet(nn.Module):
         self.g_unet = GraphUnet(
             args.ks, args.l_dim, args.l_dim, args.l_dim, self.n_act,
             args.drop_n)
+        # self.g_unet_2 = GraphUnet(
+        #     args.ks, args.l_dim, args.l_dim, args.l_dim, self.n_act,
+        #     args.drop_n)
         self.out_l_1 = nn.Linear(3*args.l_dim*(args.l_num+1), args.h_dim)
         self.out_l_2 = nn.Linear(args.h_dim, n_classes)
         self.out_drop = nn.Dropout(p=args.drop_c)
