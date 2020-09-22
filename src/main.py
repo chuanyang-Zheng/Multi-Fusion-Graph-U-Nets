@@ -44,8 +44,8 @@ def app_run(args, G_data, fold_idx,logger):
     G_data.use_fold_data(fold_idx)
     net = GNet(G_data.feat_dim, G_data.num_class, args)
     trainer = Trainer(args, net, G_data,logger)
-    trainer.train()
-
+    max_acc=trainer.train()
+    return max_acc
 
 def main():
     args = get_args()
